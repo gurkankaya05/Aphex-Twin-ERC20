@@ -1,0 +1,28 @@
+{
+  "name": "aphextoken",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@web3uikit/core": "^0.1.5",
+    "@web3uikit/icons": "^0.1.5",
+    "@web3uikit/web3": "^0.1.5",
+    "ether": "^0.0.9",
+    "ethers": "^5.6.9",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-player": "^2.10.1",
+    "web3uikit": "^1.0.2"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.17",
+    "@types/react-dom": "^18.0.6",
+    "@vitejs/plugin-react": "^2.0.1",
+    "vite": "^3.0.7"
+  }
+}
