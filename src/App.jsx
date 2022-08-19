@@ -16,7 +16,7 @@ import aphex from './img/aphex.png';
 function App() {
   const aphexToken = useAphexToken();
   const aphexTwin = useAphexContract();
-
+  const [approveStatus,setApproveStatus] = useState("");
   const[value,setValue] = useState("");  
   const[to,setTo] = useState("");
   const[transferStatus,setTransferStatus]  = useState(false);
@@ -86,6 +86,16 @@ const getContractBalance = async() => {
   }
 
 }
+const approve = async() =>{
+  setApproveStatus(true);
+  try {
+    const txn = await aphexToken.approve(to,amount);
+    await txn.wait();
+    setApproveStatus(false);
+  } catch  {
+    setApproveStatus(false);
+  }
+}
   useEffect(() => {
     checkIfWalletConnected();
   },[account])
@@ -113,7 +123,9 @@ const getContractBalance = async() => {
      <div><button onClick={transfer}> Transfer Token 💸</button></div> <br/>
      <div> <button onClick={getBalance}>Get Balance 🤑 </button></div> <br/>
      <div> <button onClick={getContractBalance}> Contract Balance 💰 </button> </div>
+     <div><button onClick={approve}>Approve ✅ </button></div>
       <p>{transferStatus ? "Transaction waiting..." :""} </p>
+      <p>{approveStatus ? "Approving..." : ""}</p>
       <h4>{!balance ? "" : ` Balance : ${ethers.utils.formatEther(balance)} APH` } </h4>
       {/* <h4>Contract Balance : {contractBalance}</h4> */}
       <h4>{!contractBalance ? ""  : `Contrat Balance : ${ethers.utils.formatEther(contractBalance)} APH`}</h4>
