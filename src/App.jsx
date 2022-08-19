@@ -19,12 +19,14 @@ function App() {
   const [approveStatus,setApproveStatus] = useState("");
   const[value,setValue] = useState("");  
   const[to,setTo] = useState("");
+  const[to2,setTo2] = useState("")
   const[transferStatus,setTransferStatus]  = useState(false);
   const[amount,setAmount] = useState("");
   const[balance,setBalance] = useState("");
   const [contractBalance, setContractBalance] = useState(null);
   const[account,setAccount] = useState();
-
+  const [symbol,setSymbol] = useState("")
+  const[transferFromStatus,setTransferFromStatus] = useState(false)
 //Wallet Function
   const connectWallet= async() =>{
     try {
@@ -67,8 +69,8 @@ const transfer = async() =>{
   } catch (error) {
     setTransferStatus(false)
   }
-
 }
+
 
 const getBalance = async() => {
   const result = await aphexTwin.getBalances(to);
@@ -96,6 +98,26 @@ const approve = async() =>{
     setApproveStatus(false);
   }
 }
+
+const _symbol = async() =>{
+  const result = await aphexToken.symbol();
+  setSymbol(result);
+
+}
+
+const _transferFrom = async() =>{
+  setTransferFromStatus(true)
+  try {
+    const txn = await aphexToken.transferFrom(to,to2,amount);
+    await txn.wait();
+    setTransferFromStatus(false);
+  } catch (error) {
+    setTransferFromStatus(false)
+    
+  }
+ 
+}
+
   useEffect(() => {
     checkIfWalletConnected();
   },[account])
@@ -116,16 +138,19 @@ const approve = async() =>{
      
       <input className='input-1' value={to} placeholder="Enter Wallet Address" onChange={(e) => setTo(e.target.value)}/><br/>
       <br/>
-
-     
+      <input className='input-2' value = {to2} placeholder="Enter Wallet Address 2" onChange={(e) => setTo2(e.target.value)} />
+      <br/>
       <input className='input-2' value = {amount} placeholder="Enter Amount" onChange={(e) => setAmount(e.target.value)} />
      </div>
      <div><button onClick={transfer}> Transfer Token 💸</button></div> <br/>
      <div> <button onClick={getBalance}>Get Balance 🤑 </button></div> <br/>
-     <div> <button onClick={getContractBalance}> Contract Balance 💰 </button> </div>
-     <div><button onClick={approve}>Approve ✅ </button></div>
+     <div> <button onClick={getContractBalance}> Contract Balance 💰 </button> </div> <br/>
+     {/* <div><button onClick={approve}>Approve ✅ </button></div> */}
+     <div><button onClick={_transferFrom}> Transfer From ✅</button></div>
+    
       <p>{transferStatus ? "Transaction waiting..." :""} </p>
       <p>{approveStatus ? "Approving..." : ""}</p>
+      <p>{transferFromStatus ? "Receiving..." : ""}</p>
       <h4>{!balance ? "" : ` Balance : ${ethers.utils.formatEther(balance)} APH` } </h4>
       {/* <h4>Contract Balance : {contractBalance}</h4> */}
       <h4>{!contractBalance ? ""  : `Contrat Balance : ${ethers.utils.formatEther(contractBalance)} APH`}</h4>
